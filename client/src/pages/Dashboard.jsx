@@ -20,7 +20,10 @@ const Dashboard = () => {
       setLastUpdated(new Date());
     } catch (err) {
       console.error('Failed to fetch poll', err);
-      // INTENTIONAL: NO REDIRECTION ON FAIL DURING POLLING
+      if (err.response?.status === 401) {
+        clearInterval(intervalRef.current);
+        logout(); // This will handle the redirect via AuthContext
+      }
     } finally {
       if (showLoading) setLoading(false);
     }
